@@ -1,14 +1,25 @@
+from datetime import datetime, timedelta
+
 class Transactions:
 
-	def __init__(self):
-		pass
+	def __init__(self,t,d,c):
+		self.tid = t
+		self.datetime = d
+		self.custid = c
+		self.items = []
 
-	def get_Items(self):
-		pass
+		a = datetime.strptime(self.datetime, '%m/%d/%Y %I:%M %p')
+		b = a - timedelta(minutes=20)
 
-	def get_Time(self):
-		pass
+		self.arrival = str(b.strftime('%m/%d/%Y %I:%M %p'))
 
-	def add_Line(self):
-		pass
+		if self.arrival[0] == "0":
+			self.arrival = self.arrival[1:]
+
+	def get_Arrival(self):
+		return self.arrival
+
+	def add_Item(self,line):
+		self.items.append(line)
+
 

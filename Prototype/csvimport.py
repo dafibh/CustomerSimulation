@@ -1,5 +1,5 @@
 def readList(transaction, lines):
-    file = open('transactions.csv', 'r') #transactions.csv
+    file = open('Prototype/transactions.csv', 'r') #transactions.csv
     contents = file.readlines()
     file.close()
 
@@ -20,7 +20,7 @@ def readList(transaction, lines):
         transaction.append(records)
 
 
-    file = open('transactionlines.csv', 'r') #transactionslines.csv
+    file = open('Prototype/transactionlines.csv', 'r') #transactionslines.csv
     contents = file.readlines()
     file.close()
 
