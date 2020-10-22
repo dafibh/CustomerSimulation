@@ -7,7 +7,7 @@ from transaction import Transactions
 pygame.init()
 clock = pygame.time.Clock()
 win = pygame.display.set_mode((500,480))
-pygame.display.set_caption("Pygame Test")
+pygame.display.set_caption("Prototype Test")
 
 
 """ Set Images """
@@ -23,6 +23,8 @@ walkRight.append(pygame.image.load('Prototype/Images/R8.png'))
 walkRight.append(pygame.image.load('Prototype/Images/R9.png'))
 bg = pygame.image.load('Prototype/Images/bg.jpg')
 char = pygame.image.load('Prototype/Images/standing.png')
+counter = pygame.image.load('Prototype/Images/counter.png')
+counter = pygame.transform.scale(counter, (72, 70))
 '''set Images end '''
 
 
@@ -64,6 +66,14 @@ def timestr(): #get time str
 """ Text on screen """
 font = pygame.font.SysFont(None , 25)
 timetext = font.render("",True,(0,0,0))
+logtitle = font.render("-- Log --",True,(0,0,0))
+logtext = font.render("",True,(0,0,0))
+itemtext = []
+itemtext.append(font.render("",True,(0,0,0)))
+itemtext.append(font.render("",True,(0,0,0)))
+itemtext.append(font.render("",True,(0,0,0)))
+itemtext.append(font.render("",True,(0,0,0)))
+itemtext.append(font.render("",True,(0,0,0)))
 
 def setTimeText(x):
     timetext = font.render(x,True,(0,0,0))
@@ -89,8 +99,17 @@ End Test multiple
 
 def redrawGameWindow(): #draw to screen
     
-    win.blit(bg, (0,0))
-    win.blit(timetext, (20,20))  
+    win.blit(bg, (0,0)) #draw background
+    win.blit(timetext, (20,20)) #draw time text
+    win.blit(logtitle, (20,260)) #draw log title text
+    win.blit(logtext, (20,280)) #draw log text
+    win.blit(counter, (350,rows[3])) #draw.counter
+
+    win.blit(itemtext[0], (20,320)) #draw log text
+    win.blit(itemtext[1], (20,340)) #draw log text
+    win.blit(itemtext[2], (20,360)) #draw log text
+    win.blit(itemtext[3], (20,380)) #draw log text
+    win.blit(itemtext[4], (20,400)) #draw log text
 
     checker = 0
     for cust in customer:
@@ -114,15 +133,13 @@ def redrawGameWindow(): #draw to screen
 '''temp variables'''
 start = 0    
 seconds = 0
-
-
+check = 0
+transactiondone=0
 
 '''end temp variables'''
 
 
-check = 0
-transactiondone=0
-print(f"time: {timestr()}")
+
 run = True
 while run:
     clock.tick(30)
@@ -142,8 +159,7 @@ while run:
 
     if current_time - start >1000:
         start = current_time
-        seconds = seconds + 1
-        """print(seconds)"""
+        """ Update time """
         start_time = addTime()
         timetext = font.render(timestr(),True,(0,0,0))
         
@@ -151,7 +167,18 @@ while run:
         for cust in customer:
             if cust.getStatus() == 1 and cust.getWait() == 1:
                 cust.status = 2
-                print(f"Cust{cust.transaction.custid} done")
+                logtext = font.render(f"Customer ID {cust.transaction.custid} completed transaction",True,(0,0,0))
+
+                #Empty Text
+                itemtext[0] = font.render("",True,(0,0,0))
+                itemtext[1] = font.render("",True,(0,0,0))
+                itemtext[2] = font.render("",True,(0,0,0))
+                itemtext[3] = font.render("",True,(0,0,0))
+                itemtext[4] = font.render("",True,(0,0,0))
+
+                for j in range(len(cust.transaction.items)): # set item text
+                    itemtext[j] = font.render(f"[{j+1}] {cust.transaction.items[j]['item']} ---  RM {cust.transaction.items[j]['price']} ",True,(0,0,0))
+
             elif cust.getStatus() == 1 and cust.getWait() == 0:
                 cust.wait = 1
 

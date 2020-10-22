@@ -29,7 +29,7 @@ def readList(transaction, lines):
         records = {
             "lid": "",
             "datetime": "",
-            "quantity": "",
+            "itemid": "",
             "item": "",
             "price": "",
 
@@ -38,7 +38,7 @@ def readList(transaction, lines):
         data = line.split(',')
         records["lid"] = data[0]
         records["datetime"] = data[2]
-        records["quantity"] = data[3]
+        records["itemid"] = data[3]
         records["item"] = data[4]
         records["price"] = data[5]
         
