@@ -59,11 +59,19 @@ def timestr(): #get time str
     return timestring
 """ End Set Time """
 
-test_time = datetime.strptime(timestr(), '%m/%d/%Y %I:%M %p')
 
-a = test_time - timedelta(minutes=20)
-test_time = a
-print(f"test_time {test_time}")
+
+""" Text on screen """
+font = pygame.font.SysFont(None , 25)
+timetext = font.render("",True,(0,0,0))
+
+def setTimeText(x):
+    timetext = font.render(x,True,(0,0,0))
+
+
+""" End Text on Screen """
+
+
 
 """
 Test multiple
@@ -81,7 +89,8 @@ End Test multiple
 
 def redrawGameWindow(): #draw to screen
     
-    win.blit(bg, (0,0))  
+    win.blit(bg, (0,0))
+    win.blit(timetext, (20,20))  
 
     checker = 0
     for cust in customer:
@@ -118,7 +127,7 @@ run = True
 while run:
     clock.tick(30)
     current_time = pygame.time.get_ticks() 
-
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -136,7 +145,8 @@ while run:
         seconds = seconds + 1
         """print(seconds)"""
         start_time = addTime()
-        print(f"time: {timestr()}")
+        timetext = font.render(timestr(),True,(0,0,0))
+        
 
         for cust in customer:
             if cust.getStatus() == 1 and cust.getWait() == 1:
@@ -149,7 +159,7 @@ while run:
 
         if timestr() == transaction[i].get_Arrival() and len(customer)<=transactiondone:
             customer.append(Cust(0,rows[2],320,transaction[i]))
-            #check = 1
+            
             transactiondone = transactiondone + 1
         
 
