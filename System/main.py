@@ -6,6 +6,7 @@ from tkinter import filedialog
 import os
 from threading import Thread
 
+# importing pages
 from pages.start import Start
 from pages.user.options import User_Options
 from pages.admin.options import Admin_Options
@@ -13,8 +14,6 @@ from pages.admin.options import Admin_Options
 from pages.admin.import_rec.admin_import import Admin_Import
 from pages.admin.customer.customer_param import Customer_Param
 from pages.admin.customer.customer_type_param import Customer_Type_Param
-#from pages.admin.customer. import 
-#from pages.admin.customer. import 
 from pages.admin.generate_rec.generate_record import Generate_Record
 from pages.admin.generation.generation_settings import Generation_Settings
 from pages.admin.product.product_options import Product_Options
@@ -85,10 +84,9 @@ class Main(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
-    def sim(self,kel):
-        #d = Thread(target=gg, args=())
-        #d.start()
-        print(kel)
+    def sim(self):
+        d = Thread(target=gg, args=())
+        d.start()
         
 
     def open_Prev(self):

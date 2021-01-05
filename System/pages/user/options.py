@@ -16,10 +16,8 @@ class User_Options(tk.Frame):
 
         label = tk.Label(topFrame, text="User Options", font=controller.title_font)
         label.pack(side="top", fill="x", pady=50)
-        entry = tk.Entry(bottomFrame)
         option1 = tk.Button(midFrame, text="Load\nPrevious\nSession", command=lambda: controller.open_Prev(), font=controller.button_font, width=10, height=5,bg="#c8cfca")
-        option2 = tk.Button(midFrame, text="Create\nNew\nSession", command=lambda: controller.sim(entry.get()), font=controller.button_font, width=10, height=5,bg="#c8cfca")
-        entry.pack()
+        option2 = tk.Button(midFrame, text="Create\nNew\nSession", command=lambda: controller.sim(), font=controller.button_font, width=10, height=5,bg="#c8cfca")
         option1.pack(side="left",padx=(150,0))
         option2.pack(side="right",padx=(0,150))
 
