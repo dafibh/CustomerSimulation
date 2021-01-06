@@ -23,21 +23,24 @@ class Generation_Settings(tk.Frame):
         label = tk.Label(topFrame, text="Record Generation Parameters", font=controller.title_font)
         label.pack(side="top", fill="x", pady=50)
 
-        nameLbl = tk.Label(midFrame1, text="Amount of Days: ", font=controller.content_font)
-        brandLbl = tk.Label(midFrame2, text="Starting Date: ", font=controller.content_font)
-        priceLbl = tk.Label(midFrame3, text="Customer Distribution: ", font=controller.content_font)
+        amountDayLbl = tk.Label(midFrame1, text="Amount of Days: ", font=controller.content_font)
+        startingDayLbl = tk.Label(midFrame2, text="Starting Date: ", font=controller.content_font)
+        distributionLbl = tk.Label(midFrame3, text="Customer Distribution: ", font=controller.content_font)
 
-        nameLbl.pack(side="left", padx=(150,0))
-        brandLbl.pack(side="left", padx=(150,0))
-        priceLbl.pack(side="left", padx=(150,0))
+        amountDayLbl.pack(side="left", padx=(150,0))
+        startingDayLbl.pack(side="left", padx=(150,0))
+        distributionLbl.pack(side="left", padx=(150,0))
 
-        nameEntry = tk.Entry(midFrame1, font=controller.content_font)
-        brandEntry = tk.Entry(midFrame2, font=controller.content_font)
-        priceEntry = tk.Entry(midFrame3, font=controller.content_font)
+        amountDayEntry = tk.Entry(midFrame1, font=controller.content_font)
+        startingDayEntry = tk.Entry(midFrame2, font=controller.content_font)
 
-        nameEntry.pack(side="right", padx=(0,150))
-        brandEntry.pack(side="right", padx=(0,150))
-        priceEntry.pack(side="right", padx=(0,150))
+        amountDayEntry.pack(side="right", padx=(0,150))
+        startingDayEntry.pack(side="right", padx=(0,150))
+
+        variable = tk.StringVar(midFrame3)
+        variable.set("Regular") # default value
+        w = tk.OptionMenu(midFrame3, variable, "Regular", "Uniform", "Exponential")
+        w.pack(side="right", padx=(0,150))
 
         doneBtn = tk.Button(midFrame4, text="Done", command=lambda: controller.show_frame("Admin_Options"), font=controller.button_font, width=10,bg="#c8cfca")
         doneBtn.pack()

@@ -39,9 +39,9 @@ class Product_Add(tk.Frame):
         brandEntry.pack(side="right", padx=(0,150))
         priceEntry.pack(side="right", padx=(0,150))
 
-        doneBtn = tk.Button(midFrame4, text="Add Product", command=lambda: controller.show_frame("Admin_Options"), font=controller.button_font, width=10,bg="#c8cfca")
+        doneBtn = tk.Button(midFrame4, text="Add Product", command=lambda: controller.show_frame("Product_Options"), font=controller.button_font, width=10,bg="#c8cfca")
         doneBtn.pack()
 
         button1 = tk.Button(bottomFrame, text="Back",
-                           command=lambda: controller.show_frame("Admin_Options"), font=controller.button_font,bg="#c8cfca")
+                           command=lambda: controller.show_frame("Product_Options"), font=controller.button_font,bg="#c8cfca")
         button1.pack()
