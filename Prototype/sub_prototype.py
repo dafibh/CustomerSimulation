@@ -114,11 +114,13 @@ def redrawGameWindow(): #draw to screen
     checker = 0
     for cust in customer:
         if cust.x <= cust.dest:
-            cust.move()
+            if pause == False:
+                cust.move()
             win.blit(walkRight[cust.getStep()//3], (cust.x,cust.y))
         else:
             if cust.getStatus() == 2:
-                cust.move()
+                if pause == False:
+                    cust.move()
                 win.blit(walkRight[cust.getStep()//3], (cust.x,cust.y))
             else:
                 win.blit(char, (cust.x, cust.y))
@@ -141,9 +143,16 @@ transactiondone=0
 
 
 run = True
+
+pause = False
 while run:
     clock.tick(30)
-    current_time = pygame.time.get_ticks() 
+
+    
+    if len(customer)>0:
+        if pygame.mouse.get_pos() >= (customer[len(customer)-1].x,customer[len(customer)-1].y) and pygame.mouse.get_pos() <= (customer[len(customer)-1].x+64,customer[len(customer)-1].y+64):
+            print(customer[len(customer)-1].transaction.custid)
+     
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -152,42 +161,47 @@ while run:
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_SPACE]:
-        print(len(customer))
+        if pause == False:
+            pause = True
+        else:
+            pause = False
 
-    if current_time <100:
-        start = current_time
+    if pause == False:
+        current_time = pygame.time.get_ticks()
+        if current_time <100:
+            start = current_time
 
-    if current_time - start >1000:
-        start = current_time
-        """ Update time """
-        start_time = addTime()
-        timetext = font.render(timestr(),True,(0,0,0))
-        
-
-        for cust in customer:
-            if cust.getStatus() == 1 and cust.getWait() == 1:
-                cust.status = 2
-                logtext = font.render(f"Customer ID {cust.transaction.custid} completed transaction",True,(0,0,0))
-
-                #Empty Text
-                itemtext[0] = font.render("",True,(0,0,0))
-                itemtext[1] = font.render("",True,(0,0,0))
-                itemtext[2] = font.render("",True,(0,0,0))
-                itemtext[3] = font.render("",True,(0,0,0))
-                itemtext[4] = font.render("",True,(0,0,0))
-
-                for j in range(len(cust.transaction.items)): # set item text
-                    itemtext[j] = font.render(f"[{j+1}] {cust.transaction.items[j]['item']} ---  RM {cust.transaction.items[j]['price']} ",True,(0,0,0))
-
-            elif cust.getStatus() == 1 and cust.getWait() == 0:
-                cust.wait = 1
-
-    for i in range(transactiondone,len(transaction)):
-
-        if timestr() == transaction[i].get_Arrival() and len(customer)<=transactiondone:
-            customer.append(Cust(0,rows[2],320,transaction[i]))
+        if current_time - start >1000:
+            start = current_time
+            """ Update time """
+            start_time = addTime()
+            timetext = font.render(timestr(),True,(0,0,0))
             
-            transactiondone = transactiondone + 1
+
+            for cust in customer:
+                if cust.getStatus() == 1 and cust.getWait() == 1:
+                    cust.status = 2
+                    logtext = font.render(f"Customer ID {cust.transaction.custid} completed transaction",True,(0,0,0))
+
+                    #Empty Text
+                    itemtext[0] = font.render("",True,(0,0,0))
+                    itemtext[1] = font.render("",True,(0,0,0))
+                    itemtext[2] = font.render("",True,(0,0,0))
+                    itemtext[3] = font.render("",True,(0,0,0))
+                    itemtext[4] = font.render("",True,(0,0,0))
+
+                    for j in range(len(cust.transaction.items)): # set item text
+                        itemtext[j] = font.render(f"[{j+1}] {cust.transaction.items[j]['item']} ---  RM {cust.transaction.items[j]['price']} ",True,(0,0,0))
+
+                elif cust.getStatus() == 1 and cust.getWait() == 0:
+                    cust.wait = 1
+
+        for i in range(transactiondone,len(transaction)):
+
+            if timestr() == transaction[i].get_Arrival() and len(customer)<=transactiondone:
+                customer.append(Cust(0,rows[2],320,transaction[i]))
+                
+                transactiondone = transactiondone + 1
         
 
     redrawGameWindow() 

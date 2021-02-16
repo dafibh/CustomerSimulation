@@ -1,4 +1,5 @@
 import tkinter as tk
+from objects.products import Products
 
 class Product_Add(tk.Frame):
 
@@ -31,17 +32,34 @@ class Product_Add(tk.Frame):
         brandLbl.pack(side="left", padx=(150,0))
         priceLbl.pack(side="left", padx=(150,0))
 
-        nameEntry = tk.Entry(midFrame1, font=controller.content_font)
-        brandEntry = tk.Entry(midFrame2, font=controller.content_font)
-        priceEntry = tk.Entry(midFrame3, font=controller.content_font)
+        self.nameEntry = tk.Entry(midFrame1, font=controller.content_font)
+        self.brandEntry = tk.Entry(midFrame2, font=controller.content_font)
+        self.priceEntry = tk.Entry(midFrame3, font=controller.content_font)
 
-        nameEntry.pack(side="right", padx=(0,150))
-        brandEntry.pack(side="right", padx=(0,150))
-        priceEntry.pack(side="right", padx=(0,150))
+        self.nameEntry.pack(side="right", padx=(0,150))
+        self.brandEntry.pack(side="right", padx=(0,150))
+        self.priceEntry.pack(side="right", padx=(0,150))
 
-        doneBtn = tk.Button(midFrame4, text="Add Product", command=lambda: controller.show_frame("Product_Options"), font=controller.button_font, width=10,bg="#c8cfca")
+        doneBtn = tk.Button(midFrame4, text="Add Product", font=controller.button_font, width=10,bg="#c8cfca")
+        doneBtn.configure(command=lambda: self.addProduct(controller, self.nameEntry.get(), self.brandEntry.get(), self.priceEntry.get()))
         doneBtn.pack()
 
         button1 = tk.Button(bottomFrame, text="Back",
                            command=lambda: controller.show_frame("Product_Options"), font=controller.button_font,bg="#c8cfca")
         button1.pack()
+
+    def addProduct(self,controller, name, brand, price):
+
+        if len(controller.productList) == 0:
+            id = 0
+        else:
+            id = controller.productList[len(controller.productList)-1].getID() + 1
+        
+        controller.productList.append(Products(id, name, brand, float(price)))
+        print(controller.productList)
+
+        self.nameEntry.delete(0,tk.END)
+        self.brandEntry.delete(0,tk.END)
+        self.priceEntry.delete(0,tk.END)
+
+        controller.refreshTables()

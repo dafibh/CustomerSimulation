@@ -13,9 +13,9 @@ class Admin_Options(tk.Frame):
         bottomFrame = tk.Frame(self)
 
         topFrame.pack(side="top", fill="x")
-        midFrame1.pack(fill="both",pady=(10,10))
-        midFrame2.pack(fill="both",pady=(10,10))
-        midFrame3.pack(fill="x",pady=(10,10))
+        midFrame1.pack(fill="both",pady=(5,5))
+        midFrame2.pack(fill="both",pady=(5,5))
+        midFrame3.pack(fill="x",pady=(5,5))
         bottomFrame.pack(side="bottom", pady=(0,10))
 
         label = tk.Label(topFrame, text="Admin Options", font=controller.title_font)
@@ -34,7 +34,7 @@ class Admin_Options(tk.Frame):
         option3.pack(side="left",padx=(150,0))
         option4.pack(side="right",padx=(0,150))
         option5.pack(side="left",padx=(150,0))
-        #option6.pack(side="right",padx=(0,150))
+        option6.pack(side="right",padx=(0,150))
 
         back = tk.Button(bottomFrame, text="Back",
                            command=lambda: controller.show_frame("Start"), font=controller.button_font,bg="#c8cfca")

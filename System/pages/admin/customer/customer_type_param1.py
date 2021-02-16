@@ -1,6 +1,6 @@
 import tkinter as tk
 
-class Customer_Type_Param(tk.Frame):
+class Customer_Type_Param1(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -18,7 +18,7 @@ class Customer_Type_Param(tk.Frame):
         midFrame3.pack(fill="x",pady=(10,10))
         bottomFrame.pack(side="bottom", pady=50)
 
-        label = tk.Label(topFrame, text="Customer Type Parameters", font=controller.title_font)
+        label = tk.Label(topFrame, text="Customer Type 1 Parameters", font=controller.title_font)
         label.pack(side="top", fill="x", pady=50)
 
         itemPurchaseLbl = tk.Label(midFrame1, text="Item Purchase Amount: ", font=controller.content_font)
@@ -26,15 +26,29 @@ class Customer_Type_Param(tk.Frame):
         itemPurchaseLbl.pack(side="left", padx=(150,0))
         visitsLbl.pack(side="left", padx=(150,0))
 
-        itemPurchaseEntry = tk.Entry(midFrame1, font=controller.content_font)
-        visitsEntry = tk.Entry(midFrame2, font=controller.content_font)
-        itemPurchaseEntry.pack(side="right", padx=(0,150))
-        visitsEntry.pack(side="right", padx=(0,150))
+        self.itemPurchaseEntry = tk.Entry(midFrame1, font=controller.content_font)
+        self.visitsEntry = tk.Entry(midFrame2, font=controller.content_font)
+        self.itemPurchaseEntry.pack(side="right", padx=(0,150))
+        self.visitsEntry.pack(side="right", padx=(0,150))
 
         
-        doneBtn = tk.Button(midFrame3, text="Done", command=lambda: controller.show_frame("Admin_Options"), font=controller.button_font, width=10,bg="#c8cfca")
+        doneBtn = tk.Button(midFrame3, text="Done", command=lambda: self.nextPage(), font=controller.button_font, width=10,bg="#c8cfca")
         doneBtn.pack()
 
         button1 = tk.Button(bottomFrame, text="Back",
                            command=lambda: controller.show_frame("Customer_Param"), font=controller.button_font,bg="#c8cfca")
         button1.pack()
+
+    def nextPage(self):
+
+        self.controller.customerTypes["t1P"] = int(self.itemPurchaseEntry.get())
+        self.controller.customerTypes["t1R"] = int(self.visitsEntry.get())
+        
+        if self.controller.customerTypesN == 1:
+            self.controller.show_frame("Admin_Options")
+            self.controller.customerStatus = 1
+            self.controller.frames["Generate_Record"].updateVisuals()
+            print(self.controller.customerTypes)
+
+        else:
+            self.controller.show_frame("Customer_Type_Param2")

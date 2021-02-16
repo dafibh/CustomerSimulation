@@ -26,15 +26,33 @@ class Customer_Param(tk.Frame):
         custAmountLbl.pack(side="left", padx=(150,0))
         custTypesLbl.pack(side="left", padx=(150,0))
 
-        custAmountEntry = tk.Entry(midFrame1, font=controller.content_font)
-        custTypesEntry = tk.Entry(midFrame2, font=controller.content_font)
-        custAmountEntry.pack(side="right", padx=(0,150))
-        custTypesEntry.pack(side="right", padx=(0,150))
+        self.custAmountEntry = tk.Entry(midFrame1, font=controller.content_font)
+        self.custTypesEntry = tk.Entry(midFrame2, font=controller.content_font)
+        self.custAmountEntry.pack(side="right", padx=(0,150))
+        self.custTypesEntry.pack(side="right", padx=(0,150))
 
         
-        nextBtn = tk.Button(midFrame3, text="Next", command=lambda: controller.show_frame("Customer_Type_Param"), font=controller.button_font, width=10,bg="#c8cfca")
+        nextBtn = tk.Button(midFrame3, text="Next", command=lambda: self.nextPage(), font=controller.button_font, width=10,bg="#c8cfca")
         nextBtn.pack()
 
         button1 = tk.Button(bottomFrame, text="Back",
                            command=lambda: controller.show_frame("Admin_Options"), font=controller.button_font,bg="#c8cfca")
         button1.pack()
+
+    def getCustN(self):
+        return self.custAmountEntry.get()
+
+    def getTypeN(self):
+        return self.custTypesEntry.get()
+
+    def nextPage(self):
+
+        if int(self.custAmountEntry.get()) < 50 or int(self.custTypesEntry.get())>3 or int(self.custTypesEntry.get()) < 1:
+            # alert
+            tk.messagebox.showinfo('Alert','Customer is less than 50 or Customer Types is not within range!')
+        else:
+            self.controller.customerAmount = int(self.getCustN())
+            self.controller.customerTypesN = int(self.getTypeN())
+            self.controller.show_frame("Customer_Type_Param1")
+
+            print(self.controller.customerAmount+self.controller.customerTypesN)
