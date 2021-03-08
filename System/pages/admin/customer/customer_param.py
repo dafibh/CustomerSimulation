@@ -55,4 +55,3 @@ class Customer_Param(tk.Frame):
             self.controller.customerTypesN = int(self.getTypeN())
             self.controller.show_frame("Customer_Type_Param1")
 
-            print(self.controller.customerAmount+self.controller.customerTypesN)

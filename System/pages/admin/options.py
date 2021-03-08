@@ -18,7 +18,7 @@ class Admin_Options(tk.Frame):
         midFrame3.pack(fill="x",pady=(5,5))
         bottomFrame.pack(side="bottom", pady=(0,10))
 
-        label = tk.Label(topFrame, text="Admin Options", font=controller.title_font)
+        label = tk.Label(topFrame, text="Generate Records", font=controller.title_font)
         label.pack(side="top", fill="x", pady=50)
 
 

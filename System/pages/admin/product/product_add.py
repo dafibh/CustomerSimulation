@@ -56,7 +56,6 @@ class Product_Add(tk.Frame):
             id = controller.productList[len(controller.productList)-1].getID() + 1
         
         controller.productList.append(Products(id, name, brand, float(price)))
-        print(controller.productList)
 
         self.nameEntry.delete(0,tk.END)
         self.brandEntry.delete(0,tk.END)

@@ -9,7 +9,6 @@ import math
 class Record_Generator:
     def __init__(self,controller):
         self.controller = controller
-        print("inited record gen")
 
     def generate(self):
         print("Generating...")
@@ -69,8 +68,6 @@ class Record_Generator:
         for i in customerList:
             transactionN += i.getReturning()
 
-        print(f"total transaction = {transactionN}")
-
         for i in range(transactionN):
             transactionList.append(Transaction(i))
 
@@ -118,25 +115,14 @@ class Record_Generator:
                 daysProcessed += 1
             startDate += timedelta(days=1)
 
-        """for i in workingDatesList:
-            print(i)"""
 
         transtodatescheck = []
 
         for i in range(transactionN): #transfer the transaction into a checking variable
             transtodatescheck.append(i)
 
-        """for i in transtodatescheck:
-            print(i)"""
 
         transactionPerDay = -(-transactionN//int(daysToSimulate))
-        """
-        for i in workingDatesList:
-            counter = 0
-            while counter < transactionPerDay and len(transtodatescheck) > 0:
-                #put date in transaction
-                transactionList[transtodatescheck.pop(0)].setDate(i)
-                counter += 1"""
 
 
         if genType == "Exponential":
@@ -277,8 +263,6 @@ class Record_Generator:
                 
                 c = c+1
 
-            for i in transactionList:
-                print(i)
 
         
 
@@ -304,8 +288,6 @@ class Record_Generator:
         # based on formula choose stuff
 
 
-        #for i in workingTime:
-            #print(i)
 
         sectionsN = len(workingTime)
         tSteps = []
@@ -314,24 +296,18 @@ class Record_Generator:
                 tSteps.append(1)
             else:
                 tSteps.append(int(math.floor(sectionsN/(tperDay[i]+1))))
-
-        for i in range(len(tSteps)):
-            print(f"steps per day : {tSteps[i]}, {tperDay[i]}")
             
         
         pointer = 0
         prevdate = transactionList[0].getDate()
 
         tstepscounter = 0
-        print(len(workingTime))
         for i in transactionList:
-            print(tstepscounter)
             if tSteps[tstepscounter] >= sectionsN:
                 tstepscounter = tstepscounter+1
             if prevdate != i.getDate() or pointer >= sectionsN:
                 pointer = 0
                 tstepscounter = tstepscounter + 1
-            print(f"pointer: {pointer} | transaction: {i}")
 
             
             i.setTime(workingTime[pointer])
@@ -373,11 +349,5 @@ class Record_Generator:
         f = open(f"{chosenDir}/transactionLines.csv", "w")
         f.write(linesText)
         f.close()
-
-        print(transactionText)
-        print(linesText)
-
-        for i in workingTime:
-            print(i)
 
         

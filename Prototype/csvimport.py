@@ -44,5 +44,3 @@ def readList(transaction, lines):
         
         lines.append(records)
 
-    #for i in lines:
-        #print(i)

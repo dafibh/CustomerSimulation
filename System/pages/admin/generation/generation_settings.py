@@ -53,12 +53,9 @@ class Generation_Settings(tk.Frame):
 
     def done(self, controller):
         controller.show_frame("Admin_Options")
-        print(self.cal.get_date())
         controller.generationDays = self.amountDayEntry.get()
         controller.generationStartingDate = self.cal.get_date()
         controller.generationCustomerDistribution = self.variable.get()
-
-        print(f"day: {controller.generationDays} | starting {controller.generationStartingDate} | dist {controller.generationCustomerDistribution}")
 
         controller.recordStatus = 1
         controller.frames["Generate_Record"].updateVisuals()

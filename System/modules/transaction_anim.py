@@ -8,7 +8,7 @@ class Transaction_Anim:
 		self.custid = c
 		self.items = []
 
-		a = datetime.strptime(self.datetime, '%m/%d/%Y %I:%M %p')
+		a = datetime.strptime(self.datetime, "%m/%d/%Y %I:%M %p")
 		b = a - timedelta(minutes=20)
 
 		self.arrival = str(b.strftime('%m/%d/%Y %I:%M %p'))

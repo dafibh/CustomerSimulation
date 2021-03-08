@@ -4,8 +4,9 @@ class Converter:
         pass
 
 
-    def convert(self, transactionlist, linelist):
+    def convert(self, transactionlist, linelist, time):
         json = {}
         json["transactions"] = transactionlist
         json["lines"] = linelist
+        json["time"] = time
         return json

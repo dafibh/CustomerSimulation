@@ -54,4 +54,3 @@ class Product_View(tk.Frame):
 
     def OnDoubleClick(self, event):
         curItem = self.table.focus()
-        print (self.table.item(curItem)['values'])

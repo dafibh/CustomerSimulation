@@ -14,10 +14,10 @@ class Simulation:
         self.testtime = 1000
         self.speed = 1
 
-    def startSim(self,tlist,llist):
+    def startSim(self,tlist,llist,time):
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.win = pygame.display.set_mode((500,480))
+        self.win = pygame.display.set_mode((500,300))
         pygame.display.set_caption("Customer Simulation System")
 
         self.walkRight = []
@@ -49,7 +49,8 @@ class Simulation:
         self.itemtext.append(self.font.render("",True,(0,0,0)))
 
         self.rows = [0,64,128,192,256,320]
-
+        
+        self.time = time
         self.tDictList = tlist
         self.lDictList = llist
         self.customer = []
@@ -61,11 +62,8 @@ class Simulation:
     
         self.win.blit(self.bg, (0,0)) #draw background
         self.win.blit(self.timetext, (20,20)) #draw time text
-        #self.win.blit(self.logtitle, (20,260)) #draw log title text
         self.win.blit(self.logtext, (20,280)) #draw log text
         self.win.blit(self.counter, (350,self.rows[3])) #draw.counter
-        #self.win.blit(self.counter, (350,self.rows[1])) #draw.counter 1
-        #self.win.blit(self.counter, (350,self.rows[5])) #draw.counter 3
 
         self.win.blit(self.itemtext[0], (20,320)) #draw log text
         self.win.blit(self.itemtext[1], (20,340)) #draw log text
@@ -96,8 +94,6 @@ class Simulation:
 
 
     def run(self):
-        #convert json first before running
-        #self.setTransactionObjects(json)
 
         self.controller.frames["SimPage"].clearLog()
         running = True
@@ -119,7 +115,6 @@ class Simulation:
                             if i.status != 2:
                                 if i.isCollide(pygame.mouse.get_pos()):
                                     self.controller.frames["SimPage"].clearInventory()
-                                    print(f"\n\n--Customer ID {i.transaction.custid} items--")
                                     total = 0
                                     for j in i.transaction.items:
                                         self.controller.frames["SimPage"].addInventory(f"RM {j['price']} - {j['item']}")
@@ -127,23 +122,16 @@ class Simulation:
                                     self.controller.frames["SimPage"].addInventory("Total : RM %.2f" % round(total, 2))
 
             self.keys = pygame.key.get_pressed()
-                
-            if self.keys[pygame.K_SPACE]:
-                #self.controller.show_frame("Admin_Options")
-                self.setTimeText("hello")
 
                 
 
             if self.pause == False:
-                self.current_time = pygame.time.get_ticks() 
-                """self.tick = self.tick+1
-                if self.tick%30 == 0: #do something every second
-                    self.controller.frames["SimPage"].addItem(self.tick/30) #add item to log box"""
+                self.current_time = pygame.time.get_ticks()
 
                 if self.current_time <100:
                     self.start = self.current_time
 
-                #if current_time - start >1000:
+                
                 if self.current_time - self.start >self.testtime:
                     self.start = self.current_time
                     """ Update time """
@@ -154,19 +142,7 @@ class Simulation:
                     for cust in self.customer:
                         if cust.getStatus() == 1 and cust.getWait() == 1:
                             cust.status = 2
-                            #logtext = font.render(f"Customer ID {cust.transaction.custid} completed transaction",True,(0,0,0))
-                            self.controller.frames["SimPage"].addItem(f"Customer ID {cust.transaction.custid} completed transaction")
-                            #self.controller.frames["SimPage"].addItem(f"T_ID: {cust.transaction.custid} | C")
-
-                            #Empty Text
-                            #itemtext[0] = font.render("",True,(0,0,0))
-                            #itemtext[1] = font.render("",True,(0,0,0))
-                            #itemtext[2] = font.render("",True,(0,0,0))
-                            #itemtext[3] = font.render("",True,(0,0,0))
-                            #itemtext[4] = font.render("",True,(0,0,0))
-
-                            #for j in range(len(cust.transaction.items)): # set item text
-                                #self.itemtext[j] = self.font.render(f"[{j+1}] {cust.transaction.items[j]['item']} ---  RM {cust.transaction.items[j]['price']} ",True,(0,0,0))
+                            self.controller.frames["SimPage"].addItem(f"tID: {cust.transaction.tid} | cID: {cust.transaction.custid} completed.")
                                 
 
                         elif cust.getStatus() == 1 and cust.getWait() == 0:
@@ -197,24 +173,29 @@ class Simulation:
                 if j["tid"] == i.tid:
                     i.add_Item(j)
 
-        self.controller.frames["SimPage"].setTransactionObjects(self.transactions)
+        self.controller.frames["SimPage"].setTransactionObjects(self.transactions, self.tDictList, self.lDictList)
         
         
-        #set starting time from first transaction, minus 1 hour
-        a = datetime.strptime(self.tDictList[0]["datetime"], '%m/%d/%Y %I:%M %p')
+        
+            
+
+        #set starting time from dict
+        a = datetime.strptime(self.time, '%m/%d/%Y %I:%M %p')
         b = a - timedelta(minutes=30)
 
         self.start_time = datetime(b.year, b.month, b.day, b.hour, b.minute)
 
-        print(f"STARTING time: {self.start_time}")
+        test = []
 
         for i in self.transactions:
-            print(i)
+            
+            date = i.arrival
+            a = datetime.strptime(date, "%m/%d/%Y %I:%M %p")
+            if a >= self.start_time:
+                test.append(i)
 
-        for i in self.transactions:
-            print(f"Customer {i.tid} items")
-            for j in i.items:
-                print(f"item name: {j['item']} | item price {j['price']}")
+        self.transactions = test
+
 
 
 
@@ -233,7 +214,6 @@ class Simulation:
 
     def quitWindow(self):
         pygame.quit()
-        print("test")
 
     def playPauseToggle(self):
         if self.pause == True:
@@ -252,6 +232,5 @@ class Simulation:
             self.testtime=self.testtime/2
             self.speed = self.speed * 2
 
-    def save(self):
-        pass
+
 

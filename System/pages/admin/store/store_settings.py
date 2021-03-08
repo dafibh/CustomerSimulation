@@ -85,6 +85,5 @@ class Store_Settings(tk.Frame):
         controller.storeCloseHour = self.operationHoursEntry2.get()
         controller.storeStatus = 1
         controller.frames["Generate_Record"].updateVisuals()
-        print(controller.storeOperationDays)
 
         

@@ -46,6 +46,5 @@ class Customer_Type_Param3(tk.Frame):
 
         self.controller.show_frame("Admin_Options")
 
-        print(self.controller.customerTypes)
         self.controller.customerStatus = 1
         self.controller.frames["Generate_Record"].updateVisuals()

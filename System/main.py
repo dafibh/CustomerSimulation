@@ -3,6 +3,7 @@ from tkinter import font  as tkfont
 from tkinter import filedialog
 import os
 from threading import Thread
+from datetime import datetime, timedelta
 
 # importing pages
 from pages.start import Start
@@ -124,18 +125,7 @@ class Main(tk.Tk):
         '''
             ---- GENERATION STATUS END ----
         '''
-
-        '''
-            ---- IMPORT VARIABLES ----
-        '''
-
         self.csvObj = Csv_Import()
-
-        #self.transaction
-
-        '''
-            ---- IMPORT VARIABLES END ----
-        ''' 
 
         # Simulator objects
         self.simulator = Simulation(self)
@@ -204,7 +194,6 @@ class Main(tk.Tk):
         frame.tkraise()
 
     def on_closing(self):
-        print("exit")
         self.simulator.quitWindow()
         self.destroy()
 
@@ -213,6 +202,7 @@ class Main(tk.Tk):
     def sim(self):
         d = Thread(target=self.openprototype, args=())
         d.start()
+        self.frames["SimPage"].clearLog()
         self.show_frame("SimPage")
         
     def simBack(self):
@@ -226,9 +216,6 @@ class Main(tk.Tk):
         self.filename = tk.filedialog.askopenfilename(initialdir = "../",title = "Select file",filetypes = (("Saved File (*.json)","*.json"),("All Files (*.*)","*.*")))
         db = TinyDB(self.filename)
         results = db.get(doc_id=1)
-        #print(result)
-        for i in results["transactions"]:
-            print(i)
         
     def openprototype(self):
         self.simulator = Simulation(self)
@@ -237,7 +224,8 @@ class Main(tk.Tk):
         results = db.get(doc_id=1)
         tlist = results["transactions"]
         llist = results["lines"]
-        self.simulator.startSim(tlist,llist)
+        time = results["time"]
+        self.simulator.startSim(tlist,llist,time)
 
     def importcsvinfos(self, tStartRow, lStartRow, tID, tDT, tCID, tID2, lIID, lI, lP, tDir, lDir):
         #print(f"{tStartRow}, {lStartRow}, {tID}, {tDT}, {tCID}, {tID2}, {lIID}, {lI}, {lP}, {tDir}, {lDir}")
@@ -246,23 +234,13 @@ class Main(tk.Tk):
         
         self.tdic,self.ldic = self.csvObj.importcsv(tDir, lDir)
 
-        """print ("\n\n\n\n\nTransaction\n\n\n")
-        for i in self.tdic:
-            print(f"\n{i}")
-        print('''\n\n\n\n\nLines\n\n\n\n\n\n\n''')
-        for i in self.ldic:
-            print(f"\n{i}")"""
-
         #Convert to JSON here
+        a = datetime.strptime(self.tdic[0]["datetime"], '%m/%d/%Y %I:%M %p')
+        b = a - timedelta(minutes=30)
+
         c = Converter()
-        json = c.convert(self.tdic, self.ldic)
-        print("THIS IS JSON AFTER CONVERT")
-        print(json)
+        json = c.convert(self.tdic, self.ldic, self.tdic[0]["datetime"])
 
-        print("\n\n\n READING THE LIST IN JSON")
-
-        for i in json["transactions"]:
-            print(i)
         #------
         #save to directory as json
         f = tk.filedialog.asksaveasfile(mode='w', defaultextension=".json",filetypes = [("JSON File",".json")])

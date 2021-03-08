@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from threading import Thread
+from tinydb import TinyDB
 
 class SimPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -147,18 +148,7 @@ class SimPage(tk.Frame):
         self.btn_Customer.configure(pady="0")
         self.btn_Customer.configure(text='''Customers per Day''')
 
-        self.btn_Stat3 = tk.Button(self)
-        self.btn_Stat3.place(relx=0.886, rely=0.9, height=38, width=63)
-        self.btn_Stat3.configure(activebackground="#ececec")
-        self.btn_Stat3.configure(activeforeground="#000000")
-        self.btn_Stat3.configure(background="#d9d9d9")
-        self.btn_Stat3.configure(disabledforeground="#a3a3a3")
-        self.btn_Stat3.configure(font="-family {Segoe UI} -size 13 -weight bold")
-        self.btn_Stat3.configure(foreground="#000000")
-        self.btn_Stat3.configure(highlightbackground="#d9d9d9")
-        self.btn_Stat3.configure(highlightcolor="black")
-        self.btn_Stat3.configure(pady="0")
-        self.btn_Stat3.configure(text='''Stat 3''')
+        
 
         #commands
         self.btn_Back.configure(command=lambda:self.controller.simBack())
@@ -168,6 +158,7 @@ class SimPage(tk.Frame):
         self.btn_Forward.configure(command=lambda:self.controller.simulator.forward())
         self.btn_Rewind.configure(command=lambda:self.controller.simulator.backward())
         self.logListbox.bind('<Double-1>', lambda x: self.logClick())
+        self.btn_Save.configure(command=lambda:self.savefile())
       
 
     def logClick(self):
@@ -176,10 +167,17 @@ class SimPage(tk.Frame):
         self.clearInventory()
 
         #change log to include transaction id
-        """for i in self.tlist:
-            if i.custid == a[2]:
+        total = 0
+        
+        for i in self.tlist:
+            if i.tid == a[1]:
                 for j in i.items:
-                    self.addInventory(str(j))"""
+                    self.controller.frames["SimPage"].addInventory(f"RM {j['price']} - {j['item']}")
+                    total = total + float(j['price'])
+                self.controller.frames["SimPage"].addInventory("Total : RM %.2f" % round(total, 2))
+
+        
+                                   
 
 
     def graphclick(self, event): #enlarging supposedly
@@ -200,15 +198,10 @@ class SimPage(tk.Frame):
         self.clearInventory()
         self.logListbox.delete(0,tk.END)
 
-    def setTransactionObjects(self, transactions):
+    def setTransactionObjects(self, transactions, tdict, ldict):
         self.tlist = transactions
-
-        print("SETTRANSACTION IN SIMPAGE")
-
-        for i in self.tlist:
-            dateonly = i.arrival.split(' ')
-            print(i)
-            print(dateonly[0])
+        self.tdict = tdict
+        self.ldict = ldict
 
         #for customer per day
         daycounter = 0
@@ -229,11 +222,6 @@ class SimPage(tk.Frame):
                     self.dates.append(dateonly[0])
                     daycounter = daycounter + 1
 
-        print("-----------------------DATES-------------------")
-        print(f"number of dates {daycounter}")
-        print("dates")
-        for i in self.dates:
-            print(i)
 
         #try to find how many customer per day
         self.customerAmounts = [] 
@@ -263,13 +251,6 @@ class SimPage(tk.Frame):
 
 
 
-        print("Customer AMounts")
-        for i in range(daycounter):
-            print(f"{self.dates[i]} - {self.customerAmounts[i]}")
-        #get from t and l the labels of x and y lists
-        #put in self variable
-
-
     def myplotcode(self,lx,ly, xlabel, ylabel):
         
 
@@ -283,14 +264,6 @@ class SimPage(tk.Frame):
         ax.set_xlabel(xlabel)
 
         return fig
-
-    """def myplotcode2(self):
-        x = np.linspace(0,2*np.pi)
-        fig = Figure()
-        ax = fig.add_subplot(111)
-        ax.plot(x, x**2)
-        
-        return fig"""
 
     def stat1(self):
         try: 
@@ -311,6 +284,20 @@ class SimPage(tk.Frame):
         self.Canvas1 = FigureCanvasTkAgg(self.fig, master=self.Labelframe2)
         self.Canvas1.get_tk_widget().pack()
         self.Canvas1.callbacks.connect('button_press_event', self.graphclick)
+
+    def savefile(self):
+        self.controller.playtoggle()
+
+        json = {}
+        json["transactions"] = self.tdict
+        json["lines"] = self.ldict
+        json["time"] = self.controller.simulator.timestr()
+        
+        f = tk.filedialog.asksaveasfile(mode='w', defaultextension=".json",filetypes = [("JSON File",".json")])
+        savedirectory = f.name
+        f.close()
+        db = TinyDB(savedirectory)
+        db.insert(json)
 
 
 
